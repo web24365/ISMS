@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block heading %}<h3>
+    <span class="fa fa-times"></span>임직원 정보 삭제 </h3>{% endblock %}
+
+{% block content %}
+
+<div class="form-group">
+    <form action="{% url 'risk:staff_delete' pk=object.pk %}" method="post">
+        {% csrf_token %}
+        <p><b>ID:{{ object.id }} {{ object.name }} ({{ object.depart }})</b>를 지우시겠습니까?</p>
+        <br>
+        <button type="submit" class="btn btn-primary" action="submit">삭제</button>
+        <button type="button" class="btn" onclick="location.href=&quot;{% url 'risk:staff_list' %}&quot;;">취소</button>
+    </form>
+</div>
+
+{% endblock %}

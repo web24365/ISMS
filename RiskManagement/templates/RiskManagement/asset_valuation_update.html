@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+    <h3><span class="fa fa-pencil"></span> 자산 평가 기준 수정</h3>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+   {% crispy form %}
+{% endblock %}
+
+{% block extrajs %}
+{% endblock %}

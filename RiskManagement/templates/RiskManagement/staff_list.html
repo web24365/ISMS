@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block heading %}
+    <h3><span class="fa fa-th"></span> 기본정보</h3>
+{% endblock %}
+
+{% block content %}
+<!--div class="container"-->
+<div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_list'%}">
+                    <button type="button" class="btn btn-primary">
+                        <span class="fa fa-stack-overflow"></span> 임직원 정보</button>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_create' %}">
+                    <button type="button" class="btn btn-success">
+                    <span class="fa fa-plus"></span> 추가</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+<!--/div-->
+<!--div class="container"-->
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table id="staff_table" class="display responsive" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="all"><center>id</center></th>
+                                <th class="all">이름</th>
+                                <th class="min-tablet">부서</th>
+                                <th class="min-tablet">직무</th>
+                                <th class="min-desktop">직위</th>
+                                <th class="min-desktop">근무 위치</th>
+                                <th class="no-sort" ></th>
+                                <th class="no-sort" ></th>
+                                <th class="no-sort" ></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+       </div>
+    </div>
+<!--/div-->
+{% block extracss %}
+<link href="{% static 'DataTables/media/css/jquery.dataTables.css' %}" rel="stylesheet">
+<link href="{% static 'DataTables/extensions/Responsive/css/dataTables.responsive.css' %}" rel="stylesheet">
+<link href="{% static 'DataTables/extensions/TableTools/css/dataTables.tableTools.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extrajs %}
+<script src="/static/jquery-2.1.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{% static '/static/DataTables/media/js/jquery.dataTables.js' %}"></script>
+<!--script src="{% static '/static/DataTables/media/js/jquery.dataTables.min.js' %}"></script-->
+<script src="{% static '/static/DataTables/extensions/Responsive/js/dataTables.responsive.js' %}"></script>
+<script src="{% static '/static/DataTables/extensions/TableTools/js/dataTables.tableTools.js' %}"></script>
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+    $('#staff_table').dataTable( {
+	stateSave: true,
+        "sAjaxSource": "{% url 'risk:staff_list_json' %}",
+        "sDom": 'T<"container">lfrtip',
+        "tableTools": {
+            "sSwfPath": "{{ STATIC_URL }}/static/DataTables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+                        "aButtons": [ "csv", "pdf" ]
+        },
+        "aLengthMenu": [
+            [10, 15, 25, 50, 75, 100],
+            [10, 15, 25, 50, 75, 100],
+        ],
+        "bProcessing": true,
+        "bServerSide": true,
+        "bRetrieve": true,
+        "bSort": true,
+        "aaSorting": [ [0,'asc'] ],
+        "aoColumnDefs": [ 
+                { "bSortable": false, "aTargets": [ "no-sort" ] } 
+        ],
+ "language": {
+            //"lengthMenu": "Display _MENU_ records per page",
+            "lengthMenu": "페이지당  _MENU_ 개의 자료",
+            "zeroRecords": "자료가 없습니다.",
+            "info": "Page _PAGE_ of _PAGES_",
+            //"info": "Showing page _PAGE_ of _PAGES_",
+            "infoEmpty": "No records available",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "_INPUT_",
+            "searchPlaceholder": "검색",
+            "paginate": { 
+                "previous": "이전" ,
+                "next": "다음"
+             }
+        }
+    } );
+} );
+</script>
+
+{% endblock %}
+
+{% endblock content %}

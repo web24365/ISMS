@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block heading %}<h3>
+    <span class="fa fa-times"></span>취약점 분석 정보 삭제 </h3>{% endblock %}
+
+{% block content %}
+
+<div class="form-group">
+    <form action="{% url 'risk:vul_analysis_delete' pk=object.pk %}" method="post">
+        {% csrf_token %}
+        <p><b>ID:{{ object.id }} {{ object.vul_code }} ({{ object.asset }})</b>를 지우시겠습니까?</p>
+        <br>
+        <button type="submit" class="btn btn-primary" action="submit">삭제</button>
+        <button type="button" class="btn" onclick="location.href=&quot;{% url 'risk:vul_analysis_list' %}&quot;;">취소</button>
+    </form>
+</div>
+
+{% endblock %}

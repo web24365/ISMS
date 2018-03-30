@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block heading %}
+    <h3><span class="fa fa-th"></span> Dashboard</h3>
+{% endblock %}
+
+{% block content %}
+<a name="about"></a>
+<div class="container">
+  <div class="row">
+        <div class="col-md-6">
+            <div class="panel">
+	    <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stack-overflow"></span> 자료 입력
+                    <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:company_list' %}">회사 기본 정보</a></li>
+                    <li><a href="{% url 'risk:department_list' %}">부서</a></li>
+                    <li><a href="{% url 'risk:duty_list' %}">주요 직무</a></li>
+                    <li><a href="{% url 'risk:staff_list' %}">임직원</a></li>
+                    <li><a href="{% url 'risk:partner_list' %}">협력 회사</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:asset_list' %}">중요 자산</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stats"></span> 기본 정보
+                    <span class="caret"></span>
+		    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:threat_list' %}">위협</a></li>
+                    <li><a href="{% url 'risk:vulnerability_list' %}">취약점</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:asset_valuation_list' %}">자산 평가 기준</a></li>
+		    </ul>
+                </div>
+		<div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stats"></span> 위험 분석
+                    <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:mapping_list' %}">위협 평가</a></li>
+                    <li><a href="{% url 'risk:vul_analysis_list' %}">취약점 분석</a></li>
+                    <li><a href="{% url 'risk:risk_analysis_list' %}">위험 분석</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:risk_control_list' %}">위험 관리</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    <div class="col-md-6" style="background-color:lavender;">
+      <h2>회사 기본 정보</h2>
+      <p>회사의 기본 정보</p>
+      <p><a class="btn btn-primary" href="{% url "risk:company_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>부서</h2>
+      <p>업무 부서 정보</p>
+      <p><a class="btn btn-primary" href="{% url "risk:department_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>임직원</h2>
+      <p>회사의 임직원 정보</p>
+      <p><a class="btn btn-primary" href="{% url "risk:staff_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>협력 회사</h2>
+      <p>협력 회사 정보</p>
+      <p><a class="btn btn-primary" href="{% url "risk:partner_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>자산 평가 기준</h2>
+      <p>보안의 3대 요소인 기밀성, 무결성, 가용성에 대한 기본 정보</p>
+      <p><a class="btn btn-primary" href="{% url "risk:asset_valuation_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>위협 정보</h2>
+      <p>위협은 자산에 해를 줄 수 있는 위험의 원천<p>
+      <p><a class="btn btn-primary" href="{% url "risk:threat_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>취약점 정보</h2>
+      <p>취약성이란 정보시스템에 손해를 끼치는 원인이 될 수 있는 조직, 절차, 인력관리, 행정, 하드웨어와 소프트웨어의 약점<p>
+      <p><a class="btn btn-primary" href="{% url "risk:vulnerability_list" %}" role="button">상세 정보&raquo;</a></p>
+    </div><!--기본정보-->
+    <div class="col-md-6" style="background-color:lavenderblush;">
+      <h2>자산</h2>
+      <p>보호해야 할 전산자원들을 식별하고 체계적으로 분류하여, 소유하고 있는 자산들의 가치를 평가</p>
+      <p><a class="btn btn-primary" href="{% url "risk:asset_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>취약점 분석</h2>
+      <p>주요 자산들에 대한 취약성 분석 결과</p>
+      <p><a class="btn btn-primary" href="{% url "risk:vul_analysis_list" %}" role="button">상세 정보&raquo;</a></p>
+
+
+      <h2>위협 평가</h2>
+      <p>식별된 위협과 중요자산들에 대한 연계<p>
+      <p><a class="btn btn-primary" href="{% url "risk:mapping_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>위험 분석</h2>
+      <p> 정보시스템과 그 자산의 비밀성(confidentiality), 무결성(integrity), 가용성(avalability), 기록성(accountability)에 영향을 미칠 수 있는 다양한 위협에 대해서 정보시스템의 취약성을 인식하고, 이로 인해서 예상되는 손실을 분석<p>
+      <p><a class="btn btn-primary" href="{% url "risk:risk_analysis_list" %}" role="button">상세 정보&raquo;</a></p>
+
+      <h2>위험 관리</h2>
+      <p> 분석된 위험들을 바탕으로 위험 수용, 위험 완화, 위험 이전, 위험 감소등의 활동<p>
+      <p><a class="btn btn-primary" href="{% url "risk:risk_control_list" %}" role="button">상세 정보&raquo;</a></p>
+    </div><!-- 위험 분석 -->
+  </div>
+</div>
+<!--
+{% for modelname in object_list %}
+	{% with "risk:"|add:modelname|lower|add:"_list" as urlvar %}
+		<li><a href="{% url urlvar %}">{{ modelname }}</a></li>
+	{% endwith %}
+{% endfor %}
+-->
+{% endblock content %}

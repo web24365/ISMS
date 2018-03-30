@@ -1,0 +1,18 @@
+{% if is_paginated %}
+<ol start="{{ page_obj.start_index }}">
+{% else %}
+<ol>
+{% endif %}
+
+{% if is_paginated %}
+<div class="pagination">
+        {% if page_obj.has_next %}
+        <nav>
+        <ul class="pager">
+        <a href="?page={{ page_obj.next_page_number }}">다음</a>
+        </ul>
+        </nav>
+        {% endif %}
+</div>
+{% endif %}
+

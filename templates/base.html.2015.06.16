@@ -1,0 +1,139 @@
+{% load staticfiles %}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>아이시큐어 위험 관리 시스템</title>
+
+    <!-- CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/sticky-footer-navbar.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/sb-admin-2.css' %}" rel="stylesheet">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% block extracss %}
+    {% endblock %}
+
+    <!-- Add custom CSS here -->
+    {% block customcss %}
+    	<!--style>
+    		body {padding-bottom: 40px;}
+    	</style-->
+    {% endblock %}
+
+</head>
+
+<body> 
+<div id="wrapper">
+  <nav class="navbar navbar-default navbar-fixed-top active" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/RiskManagement/">&copy; 아이시큐어 위험 관리 시스템</a>
+    </div><!--navbar-header-->
+    <!--div id="navbar" class="navbar-collapse collapse"-->
+      <ul class="nav navbar-top-links navbar-right">
+        <li class="active"><a href="{% url 'login' %}">Home</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+      </ul><!--navbar-top-links-->
+    
+{% block rootcontainer %}
+    <div class="navbar-default sidebar" role="navigation">
+      <div class="sidebar-nav">
+        <ul class="nav in" id="side-menu">
+          <li class="active"><a href="/RiskManagement/"><i class="fa fa-dashboard fa-fw"></i>Overview <span class="sr-only">(current)</span></a></li>
+          <li><a href="{% url 'risk:company_list' %}">회사 기본 정보</a></li>
+          <li><a href="{% url 'risk:department_list' %}">부서</a></li>
+          <li><a href="{% url 'risk:duty_list' %}">주요 직무</a></li>
+          <li><a href="{% url 'risk:staff_list' %}">임직원</a></li>
+          <li><a href="{% url 'risk:partner_list' %}">협력 회사</a></li>
+          <li><a href="{% url 'risk:threat_list' %}">위협</a></li>
+          <li><a href="{% url 'risk:vulnerability_list' %}">취약점</a></li>
+          <li><a href="{% url 'risk:asset_valuation_list' %}">자산 평가 기준</a></li>
+          <li><a href="{% url 'risk:asset_list' %}">중요 자산</a></li>
+          <li><a href="{% url 'risk:mapping_list' %}">위협 평가</a></li>
+          <li><a href="{% url 'risk:vul_analysis_list' %}">취약점 분석</a></li>
+          <li><a href="{% url 'risk:risk_analysis_list' %}">위험 분석</a></li>
+        </ul>
+      </div><!--sidebar-nav-->
+    </div><!--navbar-->
+</nav>
+        {% block breadcrumbs %}
+        {% endblock %}
+
+<div id="page-wrapper" style="min-height: 752px;">
+  <div class="row">
+    <div class="col-lg-12">
+          <div class="page-header">
+            {% block heading %}
+	    {% endblock %}
+          </div>
+          {% block content %}
+	  {% endblock %}
+    </div><!--col-lg-12-->
+  </div><!--row-->
+</div><!-- page-wrapper -->
+</div>
+</div>
+{% endblock %}
+
+<!--FOOTER>
+<div id="footer" class="navbar-default">
+<div id="footer">
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container-fluid">
+                <footer> 
+                  <p class="pull-right"><a href="#">Back to top</a></p>
+                  <p class="text-muted">
+                      &copy; 2015 <a href="http://www.isecurekr.com">iSecure Inc</a>
+                      | <a href="#">Blog</a>
+                      | <a href="#">About</a>
+                      | <a href="mailto:isecure@isecurekr.com">Contact Us</a>
+                  </p>
+                </footer>
+            </div>
+	</nav>
+</div-->
+
+<!-- JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="/static/jquery-2.1.4.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+{% block extrajs %}
+{% endblock %}
+
+<!--script type="text/javascript">
+function somefunction() {
+    $('#id_submit_button_type').val('submit_and_add');
+}
+
+$(document).ready(function() {
+    $('#submit-id-submit_and_add').click(somefunction);
+});
+  //          $(function () {
+   //             $('form').submit(function(){
+    //                $(this).find('input[type=submit]').prop('disabled', true);
+     //           });
+      //      });
+</script-->
+
+</body>
+</html>

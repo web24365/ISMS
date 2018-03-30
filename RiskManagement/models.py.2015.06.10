@@ -1,0 +1,345 @@
+#-*- coding: utf-8 -*-
+
+from django.db import models
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
+#from django_extensions.db.fields import AutoSlugField
+
+# Create your models here.
+
+Low = 1
+Medium = 2
+High = 3
+RATING_CHOICES = (
+                (Low, 'Low'),
+                (Medium, 'Medium'),
+                (High, 'High'),
+)
+
+FACTOR_CHOICES = (
+    ('C', 'Confidential'),
+    ('I', 'Integrity'),
+    ('A', 'Availability'),
+)
+
+VUL_CHOICES = (
+    ('Unix', 'Unix Server 취약점'),
+    ('Windows', 'Windows Server 취약점'),
+    ('Web', 'Web server 취약점'),
+    ('Network', 'Network 장비 취약점'),
+    ('Security', '보안 장비 취약점'),
+    ('DB', 'DB 취약점'),
+    ('PC', 'PC 취약점'),
+    ('Management', '관리적 취약점'),
+    ('Physical', '물리적 취약점'),
+)
+
+ASSET_CHOICES = (
+	('Info', '정보'),
+	('SW', '소프트웨어'),
+	('Server', "서버"),
+	('Network', "네트워크"),
+	('Security', "정보보호시스템"),
+	('DBMS', "DBMS"), 
+	('Web', "Web 서버"),
+	('PC', "PC"),
+	('URL', "URL"),
+	('Physical', "물리적 자산"),
+)
+
+# 회사
+class Company(models.Model):
+
+	class Meta:
+		verbose_name = u'회사'
+
+        corp_name=models.CharField(verbose_name=u'회사 이름', max_length = 30)
+        biz_reg_no=models.CharField(verbose_name=u'사업자등록번호', max_length = 30)
+        address=models.CharField(verbose_name=u'사업장 소재지', max_length = 100)
+        established=models.DateField(verbose_name=u'개업일')
+        biz_type=models.CharField(verbose_name=u'업태', max_length = 30)
+        representative=models.CharField(verbose_name=u'대표자', max_length = 30)
+        sales=models.IntegerField(verbose_name=u'전년도 매출액')
+
+# table name
+        def __unicode__(self):
+                return self.corp_name
+
+	def get_absolute_url(self):
+		#return  reverse('risk:company_detail', kwargs={ 'pk': self.slug })
+		return  reverse('risk:company_detail', kwargs={ 'pk': str(self.id) })
+		#return  "/RiskManagement/company/%i" %self.id
+
+
+# 부서
+class Department(models.Model):
+
+	class Meta:
+		verbose_name = u'부서'
+		ordering = ['depart']
+
+        corpinfo=models.ForeignKey(Company, verbose_name=u'회사')
+        depart=models.CharField(verbose_name=u'부서', max_length = 30)
+        desc=models.CharField(verbose_name=u'주요 업무', max_length = 50)
+
+        def __unicode__(self):
+                return self.depart
+
+# 직무 기술
+class Duty(models.Model):
+
+	class Meta:
+		verbose_name = u'직무 기술서'
+		ordering = [ 'duty' ]
+
+        duty=models.CharField(verbose_name=u'직무', max_length=20)
+        outline=models.CharField(verbose_name=u'개요', max_length=100)
+        desc=models.TextField(verbose_name=u'직무 기술')
+
+	def display_desc_safefield(self):
+		return mark_safe(self.desc)
+
+        def __unicode__(self):
+                return self.duty
+
+	def get_absolute_url(self):
+		return  reverse('risk:duty_detail', kwargs={ 'pk': str(self.id) })
+		#return  reverse('risk:duty_list')
+
+# 인원
+class Staff(models.Model):
+
+	class Meta:
+		verbose_name = u'임직원'
+		ordering = [ 'name' ]
+
+        name=models.CharField(verbose_name=u'이름', max_length = 30)
+        depart=models.ForeignKey(Department, verbose_name=u'부서')
+        duty=models.ForeignKey(Duty, verbose_name=u'직무')
+        position=models.CharField(verbose_name=u'직위', max_length = 30)
+        location=models.CharField(verbose_name=u'위치', max_length = 100)
+
+        def __unicode__(self):
+                return self.name
+
+# 협력 회사
+class Partner(models.Model):
+		verbose_name = u"협력회사"
+		ordering = [ 'name' ]
+		
+		name=models.CharField(verbose_name=u"회사명", max_length=30)
+		outline=models.CharField(verbose_name=u"주요 업무", max_length=30)
+		desc=models.CharField(verbose_name=u"상세 내역", max_length=200)
+		
+		def __unicode__(self):
+                	return self.name
+
+# 자산 평가 기준
+class Asset_valuation(models.Model):
+
+	class Meta:
+		verbose_name = u"자산 평가기준"
+		ordering = [ 'cia']
+
+	valuation_code = models.CharField(max_length=10)
+	cia = models.CharField(max_length=1, choices=FACTOR_CHOICES, verbose_name=u"평가 기준")
+	rating = models.IntegerField(choices=RATING_CHOICES, verbose_name=u"구분")
+	desc = models.CharField(max_length=200, verbose_name=u"상세 내용")
+
+	def __unicode__(self):
+               	return self.cia
+
+# 자산 분석
+class Asset(models.Model):
+
+	class Meta:
+        	verbose_name = u'자산'
+                ordering = [ 'asset_class', 'asset_name']
+
+	asset_code=models.CharField(verbose_name=u'자산 코드', max_length = 20)
+	asset_class=models.CharField(choices=ASSET_CHOICES, verbose_name=u'자산 분류', max_length = 8)
+	asset_name=models.CharField(verbose_name=u'이름', max_length = 50, blank=True)
+	staff_name=models.ForeignKey(Staff, verbose_name=u'관리자')
+	use=models.CharField(verbose_name=u'용도', max_length = 50, blank=True)
+	cnt=models.IntegerField(verbose_name=u'수량', default=1, blank=True)
+	model=models.CharField(verbose_name=u'기종(model 명)', max_length = 50, blank=True)
+	made=models.CharField(verbose_name=u'제조업체', max_length = 50, blank=True)
+	url=models.URLField(verbose_name=u'URL', max_length = 100, blank=True)
+	os=models.CharField(verbose_name=u'OS', max_length = 50, blank=True)
+	version=models.CharField(verbose_name=u'Version', max_length = 50, blank=True)
+	ip=models.GenericIPAddressField(verbose_name=u'IP address', blank=True, null=True)
+	mac=models.CharField(verbose_name=u'MAC address', max_length = 50, blank=True)
+	location=models.CharField(verbose_name=u'위치', max_length = 100, blank=True)
+	archive=models.CharField(verbose_name=u'보관형태', max_length = 50, blank=True)
+	confidential=models.IntegerField(choices=RATING_CHOICES, verbose_name=u'Confidential', blank=True)
+	integrity=models.IntegerField(choices=RATING_CHOICES, verbose_name=u'Integrity', blank=True)
+	availability=models.IntegerField(choices=RATING_CHOICES, verbose_name=u'Availability', blank=True)
+	text=models.TextField(verbose_name=u'비고', blank=True)
+
+	def _get_score(self):
+		return self.confidential * self.integrity * self.availability
+
+	asset_score = property(_get_score)
+
+#	def _get_confidential(self):
+#		Asset_valuation.objects.get(cia="C")
+#		return self.Asset_valuation
+#	c = property(_get_confidential, choices="RATING CHOICES")
+#
+#	def _get_Integrity(self):
+#		Asset_valuation.objects.get(cia="I")
+#		return self.Asset_valuation
+#	i = property(_get_Integrity)
+#	
+#	def _get_availability(self):
+#		Asset_valuation.objects.get(cia="A")
+#		return self.Asset_valuation
+#	a = property(_get_availability)
+
+	def __unicode__(self):
+		return self.asset_name
+	
+# 취약점 항목 정리
+class Vulnerability(models.Model):
+
+	class Meta:
+                verbose_name = u'취약점'
+                ordering = [ 'vul_code' ]
+
+	vul_code=models.CharField(max_length = 20)
+	vul_class=models.CharField(choices=VUL_CHOICES, default="Management", verbose_name=u'취약점 분류', max_length = 10)
+	entry=models.CharField(verbose_name=u'취약점 유형', max_length = 50)
+	desc=models.TextField(verbose_name=u'취약점 내용')
+	rating=models.IntegerField(choices=RATING_CHOICES, default='High', verbose_name=u'취약점 등급')
+
+	def display_desc_safefield(self):
+		return mark_safe(self.desc)
+
+	def __unicode__(self):
+		return self.vul_entry
+
+# 위협 분석
+class Threat(models.Model):
+
+	class Meta:
+                verbose_name = u'위협'
+                ordering = [ 'threat_code' ]
+
+	threat_code=models.CharField(max_length = 20)
+	category=models.CharField(max_length=10, choices=ASSET_CHOICES, default='Information', verbose_name=u'위협 유형')
+	entry=models.CharField(verbose_name=u'위협 내용', max_length = 50)
+	scenario=models.TextField(verbose_name=u'위협 시나리오')
+	impact=models.IntegerField(choices=RATING_CHOICES, default='High', verbose_name=u'위협 강도')
+	frequency=models.IntegerField(choices=RATING_CHOICES, default='High', verbose_name=u'발생 빈도')
+#	threat_score=models.CharField(verbose_name=u'위협 점수', max_length = 10)
+
+	def display_scenario_safefield(self):
+		return mark_safe(self.desc)
+
+	def _get_score(self):
+		return self.threat_impact * self.threat_frequency
+
+	threat_score = property(_get_score)
+
+	def __unicode__(self):
+		return self.threat_code
+
+# 자산과 위협 상관 관계 분석
+class Mapping(models.Model):
+
+	class Meta:
+                verbose_name = u'자산과 위협 상관 관계 분석'
+                ordering = [ 'mapping_code' ]
+
+	mapping_code=models.CharField(max_length = 20)
+	asset=models.ForeignKey(Asset, verbose_name=u'자산 코드')
+#	threat_code=models.ForeignKey(Threat, verbose_name=u'위협 코드')
+
+	def _get_threat(self):
+                return self.Asset.asset
+        threat_code = property(_get_threat)
+
+	def __unicode__(self):
+		return self.mapping_code
+
+# 취약점 분석
+class Vul_analysis(models.Model):
+
+	class Meta:
+                verbose_name = u'취약점 분석'
+                ordering = [ 'vul_code' ]
+
+	vul_code=models.ForeignKey(Vulnerability, verbose_name=u'취약점 코드')
+	asset=models.ForeignKey(Asset, verbose_name=u'자산 코드')
+	created= models.DateTimeField(auto_now_add=True, verbose_name=u'분석 날짜')
+	updated= models.DateTimeField(auto_now=True, verbose_name=u'update 날짜')
+	#vul_results=models.IntegerField(verbose_name=u'취약점 분석 결과')
+
+	def _get_vul(self):
+		return self.asset.asset_score * self.vulnerability.vul_rating
+
+	vul_score = property(_get_vul)
+
+
+	def __unicode__(self):
+		return self.vul_code
+
+# 위험 분석
+class Risk_analysis(models.Model):
+
+	class Meta:
+                verbose_name = u'위험 분석'
+                ordering = [ 'risk_code' ]
+
+	risk_code=models.CharField(max_length = 20)
+	asset= models.ForeignKey(Asset, verbose_name=u'자산 코드')
+	vul_code=models.ForeignKey(Vul_analysis, verbose_name=u'취약점 분석 코드')
+	mapping_code=models.ForeignKey(Mapping, verbose_name=u'연관 코드')
+	created = models.DateTimeField(auto_now_add=True, verbose_name=u'분석 날짜')
+	updated = models.DateTimeField(auto_now=True, verbose_name=u'update 날짜')
+
+	#def _get_vScore(self):
+	#	return self.vul_analysis.vul_results
+	#vul_score = property(_get_vScore)
+
+	#def _get_tScore(self):
+	#	return self.threat.threat_score
+	#threat_score = property(_get_tScore)
+
+	def _get_rScore(self):
+                return self.vul_score * self.threat_score
+
+	risk_score = property(_get_rScore)
+
+	def __unicode__(self):
+		return self.risk_code
+
+# 위험 관리
+class Risk_control(models.Model):
+
+	class Meta:
+                verbose_name = u'위험 처리 방안'
+                ordering = [ 'risk_action_code' ]
+
+	ACTION_CHOICES = (
+                ('acceptance', '위험 수용'),
+                ('reduction', '위험 완화'),
+                ('transfer', '위험 이전'),
+                ('avoidance', '위험 회피'),
+        )
+
+	risk_action_code = models.ForeignKey(Risk_analysis)
+	control_item = models.CharField(max_length=50, verbose_name=u'통제 항목', blank=True)
+	risk_action = models.CharField(max_length=20, choices=ACTION_CHOICES, default='acceptance', verbose_name=u'위험 대응 방안')
+	as_is = models.CharField(max_length=200, verbose_name=u'현재 상황', blank=True)
+	to_be = models.CharField(max_length=200, verbose_name=u'향후 계획', blank=True)
+	desc = models.TextField(verbose_name=u'상세 위험 관리')
+	created = models.DateTimeField(auto_now_add=True, verbose_name=u'분석 날짜')
+	updated = models.DateTimeField(auto_now=True, verbose_name=u'update 날짜')
+
+	def display_desc_safefield(self):
+		return mark_safe(self.desc)
+
+	def __unicode__(self):
+		return self.risk_action
+

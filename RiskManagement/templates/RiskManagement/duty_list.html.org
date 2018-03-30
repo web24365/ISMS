@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<h2>직무 기술서</h2>
+	<ul>
+		{% for duty in object_list %}
+			<li><a href="{% url 'risk:duty_detail' duty.id %}">{{ duty.duty }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock content %}

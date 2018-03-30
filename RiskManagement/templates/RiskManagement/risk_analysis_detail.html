@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ object.risk_code }}</h2>
+<li>작성일: {{ object.created }}</li>
+<li>변경일: {{ object.updated }}</li>
+<li>자산: {{ object.asset_code}}</li>
+<li>취약점 위협 분석 결과: {{ object.mapping_code }}</li>
+<li>위험 점수: {{ object.risk_score }}</li>
+{% endblock content %}

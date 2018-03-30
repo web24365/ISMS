@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block heading %}
+    <h3><h3><span class="fa fa-th"></span> 기본정보</h3>
+{% endblock %}
+
+{% block content %}
+<!--div class="container"-->
+<div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_list'%}">
+                    <button type="button" class="btn btn-primary">
+                        <span class="fa fa-stack-overflow"></span> 임직원 정보</button>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_create' %}">
+                    <button type="button" class="btn btn-success">
+                    <span class="fa fa-plus"></span> 추가</button>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_update' pk=object.pk %}">
+                    <button type="button" class="btn btn-warning">
+                    <span class="fa fa-pencil"></span> 수정</button>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'risk:staff_delete' pk=object.pk %}">
+                    <button type="button" class="btn btn-danger">
+                    <span class="fa fa-minus"></span> 삭제</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+<!--/div-->
+<div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">
+                                <b>{{ object.name}}</b>
+                            </h3>
+                        </div>
+                        <table class="table table-condensed">
+                            <tr>
+                                <td width=15%><b>부서</b></td>
+                                <td>{{ object.depart }}</td>
+                            </tr>
+                            <tr>
+                                <td width=15%><b>직무</b></td>
+                                <td>{{ object.duty }}</td>
+                            </tr>
+                            <tr>
+                                <td width=15%><b>직위/직책</b></td>
+                                <td>{{ object.position }}</td>
+                            </tr>
+                            <tr>
+                                <td width=15%><b>근무위치</b></td>
+                                <td>{{ object.location }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+</div> <!-- end row -->
+
+{##% if object.submitter == user %##}
+{##% endif %##}
+
+<p>작성자:{{ object.submitter }}</p>
+{% endblock content %}

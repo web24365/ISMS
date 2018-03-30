@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ object.risk_action_code }}</h2>
+<li>위험 처리 방안: {{ object.risk_action}}</li>
+<li>상세 내역: {{ object.desc }}</li>
+{% endblock content %}

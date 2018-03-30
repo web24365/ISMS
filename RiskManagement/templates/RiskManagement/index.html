@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block heading %}
+    <h3><span class="fa fa-th"></span> Dashboard</h3>
+{% endblock %}
+
+{% block content %}
+<div id="count" data-toggle="tooltip">
+<li>{% url 'risk:company_detail' pk=1 %}</li>
+<li>"{{ department.num_departs }}"</li>
+</div>
+	    <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stack-overflow"></span> 자료 입력
+                    <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:company_list' %}">회사 기본 정보</a></li>
+                    <li><a href="{% url 'risk:department_list' %}">부서</a></li>
+                    <li><a href="{% url 'risk:duty_list' %}">주요 직무</a></li>
+                    <li><a href="{% url 'risk:staff_list' %}">임직원</a></li>
+                    <li><a href="{% url 'risk:partner_list' %}">협력 회사</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:asset_list' %}">중요 자산</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stats"></span> 기본 정보
+                    <span class="caret"></span>
+		    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:threat_list' %}">위협</a></li>
+                    <li><a href="{% url 'risk:vulnerability_list' %}">취약점</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:asset_valuation_list' %}">자산 평가 기준</a></li>
+		    </ul>
+                </div>
+		<div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-stats"></span> 위험 분석
+                    <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'risk:vul_analysis_list' %}">취약점 분석</a></li>
+                    <!--li><a href="{% url 'risk:mapping_list' %}">위협 평가</a></li-->
+                    <li><a href="{% url 'risk:risk_analysis_list' %}">위험 분석</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'risk:risk_control_list' %}">위험 관리</a></li>
+                    </ul>
+                </div>
+	</div>
+{% endblock content %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#count').tooltip();
+
+	var statsUrl = "{% url 'risk:stats_json' %}";
+	function loadStats() {
+		$.getJSON(statsUrl,
+		    function(data) {
+			document.getElementById('department_count').innerHTML =
+				data['stats']['department_count']['value'];
+		}
+	)};
+	loadStats();
+});
+</script>
+{% endblock %}
+
